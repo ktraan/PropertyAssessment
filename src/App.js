@@ -3,15 +3,13 @@ import Form from './Form'
 import Jumbotron from 'react-bootstrap/Jumbotron'
 import Row from 'react-bootstrap/Row'
 
-import 'bootstrap/dist/css/bootstrap.css';
-
 function App() {
   return(
     <>
-    <Row>
-      <Jumbotron>
+    <Row className="d-flex justify-content-center">
+      <Jumbotron className="">
         <h1 className="mb-16">Property Assessment</h1>
-        <h2>Select the Edmonton address you would like more information on!</h2>
+        <h2>Enter the Edmonton address you would like more information on!</h2>
       </Jumbotron>
     </Row>
     
