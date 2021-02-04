@@ -6,6 +6,16 @@ import Form from './components/Form';
 
 function App() {
   const [address, setAddress] = useState('');
+  const BASE_URL_ENDPOINT = 'https://data.edmonton.ca/resource/q7d6-ambg.json?';
+
+  const getAssessment = async (props) => {
+    const fullAddress = `${props.houseNumber} ${props.streetName}`;
+    setAddress(fullAddress);
+    console.log(address);
+
+    // setAddress(`${props.houseNumber} ${props.streetName}`);
+    // console.log(`Full address: ${address}`);
+  };
 
   return (
     <div className='container'>
@@ -17,7 +27,7 @@ function App() {
           </h2>
         </Jumbotron>
       </Row>
-      <Form />
+      <Form getAssessment={getAssessment} />
     </div>
   );
 }
