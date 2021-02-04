@@ -11,8 +11,6 @@ function SearchAddress() {
   const [error, setError] = useState(null)
   const [address, setAddress] = useState([])
 
-  let assessments = [];
-
   useEffect(() => {
     fetch(URL_ENDPOINT)
     .then(response => response.json())
