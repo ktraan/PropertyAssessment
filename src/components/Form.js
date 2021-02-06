@@ -16,13 +16,18 @@ const Form = ({ getAssessment }) => {
     }
 
     // Set values to getAssessment props
-    getAssessment({ houseNumber, streetName });
-    // console.log(`${houseNumber} ${streetName}`);
+    getAssessment({ houseNumber, streetName, errors });
   };
 
   return (
     <form onSubmit={onSubmit}>
-      {errors ? <div className='alert alert-danger'>{errors}</div> : ''}
+      {errors ? (
+        <div className='alert alert-danger'>
+          <strong>{errors}</strong>
+        </div>
+      ) : (
+        ''
+      )}
       <div>
         <label>House Number:</label>
         <input
@@ -32,7 +37,7 @@ const Form = ({ getAssessment }) => {
           onChange={(e) => setHouseNumber(e.target.value)}
         />
         <br />
-        <label>Street Name:</label>
+        <label className='mt-2'>Street Name:</label>
         <input
           type='text'
           value={streetName}
@@ -40,7 +45,7 @@ const Form = ({ getAssessment }) => {
           onChange={(e) => setStreetName(e.target.value)}
         />
         <br />
-        <button className='btn btn-primary' type='submit'>
+        <button className='btn btn-primary mt-3 ml-3' type='submit'>
           Get Assessment
         </button>
       </div>

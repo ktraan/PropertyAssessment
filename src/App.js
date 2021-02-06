@@ -1,8 +1,9 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Jumbotron from 'react-bootstrap/Jumbotron';
-import Row from 'react-bootstrap/Row';
 import Form from './components/Form';
+import Row from 'react-bootstrap/Row';
+import Container from 'react-bootstrap/Container';
 
 function App() {
   const [assessment, setAssessment] = useState('');
@@ -10,6 +11,7 @@ function App() {
     houseNumber: '',
     streetName: '',
   });
+  const [errors, setErrors] = useState('');
 
   const BASE_URL_ENDPOINT = 'https://data.edmonton.ca/resource/q7d6-ambg.json?';
 
@@ -29,23 +31,42 @@ function App() {
     const res = await fetch(
       `${BASE_URL_ENDPOINT}house_number=${houseNumber}&street_name=${streetName}`
     );
-    console.log(res);
     const data = await res.json();
-    console.log(data);
+
+    if (data.length === 0) {
+      setErrors(
+        `No property assessment found for ${houseNumber} ${streetName}`
+      );
+    } else {
+      setAssessment(data[0]);
+      setErrors('');
+    }
   };
 
   return (
-    <div className='container'>
-      <Row className='d-flex justify-content-center'>
-        <Jumbotron className=''>
-          <h1 className='mb-16'>Property Assessment</h1>
-          <h2>
-            Enter the Edmonton address you would like more information on!
-          </h2>
-        </Jumbotron>
+    <Container>
+      <Jumbotron fluid>
+        <h1 className='ml-4'>Edmonton Property Assessment</h1>
+
+        <h4 className='ml-4 mt-3'>
+          Enter the Edmonton address you would like more information on!
+        </h4>
+      </Jumbotron>
+      {errors ? (
+        <div className='alert alert-warning'>
+          <strong>{errors} </strong>
+        </div>
+      ) : (
+        ''
+      )}
+
+      <Row>
+        <div className='col-lg-3'>
+          <Form getAssessment={getAssessment} />
+        </div>
+        <div className='col-lg-3'>{assessment.house_number}</div>
       </Row>
-      <Form getAssessment={getAssessment} />
-    </div>
+    </Container>
   );
 }
 
