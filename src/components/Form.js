@@ -45,7 +45,10 @@ const Form = ({ getAssessment }) => {
           onChange={(e) => setStreetName(e.target.value)}
         />
         <br />
-        <button className='btn btn-primary mt-3 ml-3' type='submit'>
+        <button
+          className='btn btn-primary mt-3 justify-content-end ml-4'
+          type='submit'
+        >
           Get Assessment
         </button>
       </div>
