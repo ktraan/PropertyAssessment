@@ -3,31 +3,24 @@ import { useState } from 'react';
 const Form = ({ getAssessment }) => {
   const [houseNumber, setHouseNumber] = useState('');
   const [streetName, setStreetName] = useState('');
-  const [errors, setErrors] = useState('');
+  // const [errors, setErrors] = useState('');
 
   const onSubmit = (event) => {
     event.preventDefault();
 
     // Handle empty values
-    if (!houseNumber || !streetName) {
-      setErrors('Please enter all of the fields before submitting.');
-    } else {
-      setErrors('');
-    }
+    // if (!houseNumber || !streetName) {
+    //   setErrors('Please enter all of the fields before submitting.');
+    // } else {
+    //   setErrors('');
+    // }
 
     // Set values to getAssessment props
-    getAssessment({ houseNumber, streetName, errors });
+    getAssessment({ houseNumber, streetName });
   };
 
   return (
     <form onSubmit={onSubmit}>
-      {errors ? (
-        <div className='alert alert-danger'>
-          <strong>{errors}</strong>
-        </div>
-      ) : (
-        ''
-      )}
       <div>
         <label>House Number:</label>
         <input

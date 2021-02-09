@@ -19,13 +19,20 @@ function App() {
 
   // Get assessment from props
   const getAssessment = async (props) => {
-    const houseNumber = props.houseNumber;
-    const streetName = props.streetName.toUpperCase();
+    let houseNumber;
+    let streetName;
 
     // Set the full address to state
-    setAddress({ houseNumber: houseNumber, streetName: streetName });
-
-    fetchAssessment(houseNumber, streetName);
+    if (props.houseNumber === '' || props.streetName === '') {
+      setErrors('Please enter the values before submitting.');
+    } else {
+      setErrors('');
+      houseNumber = props.houseNumber;
+      streetName = props.streetName.toUpperCase();
+      // Set the full address to state
+      setAddress({ houseNumber: houseNumber, streetName: streetName });
+      fetchAssessment(houseNumber, streetName);
+    }
   };
 
   // Fetch assessment
@@ -34,9 +41,6 @@ function App() {
       `${BASE_URL_ENDPOINT}house_number=${houseNumber}&street_name=${streetName}`
     );
     const data = await res.json();
-
-    console.log(res.data);
-    console.log(data);
 
     if (data.length === 0) {
       setErrors(
@@ -69,12 +73,14 @@ function App() {
         <div className='col-lg-3'>
           <Form getAssessment={getAssessment} />
         </div>
-        <div className='col-lg-8 align-self-center'>
-          <h2>
-            <i>Property Assessment for:</i> {assessment.house_number}{' '}
-            {assessment.street_name}
-          </h2>
-        </div>
+        {assessment && (
+          <div className='col-lg-8 align-self-center'>
+            <h2>
+              <i>Property Assessment for:</i> {assessment.house_number}{' '}
+              {assessment.street_name}
+            </h2>
+          </div>
+        )}
       </Row>
     </Container>
   );
