@@ -2,10 +2,11 @@ import React from 'react';
 import { useState } from 'react';
 import './styles/index.css';
 import Jumbotron from 'react-bootstrap/Jumbotron';
-import Form from './components/Form';
 import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
 import Image from 'react-bootstrap/Image';
+import Table from 'react-bootstrap/Table';
+import Form from './components/Form';
 import edmontonCity from './assets/edmonton.jpg';
 
 function App() {
@@ -45,11 +46,19 @@ function App() {
 
     if (data.length === 0) {
       setErrors(
-        `No property assessment found for ${houseNumber} ${streetName}`
+        `No property assessment found for ${houseNumber} ${streetName}. Did you forget the direction? eg. NW`
       );
     } else {
       setAssessment(data[0]);
       setErrors('');
+    }
+  };
+
+  const hasGarage = async () => {
+    if (assessment.garage === 'Y') {
+      return true;
+    } else {
+      return false;
     }
   };
 
@@ -83,6 +92,42 @@ function App() {
           </div>
         )}
       </Row>
+
+      {assessment ? (
+        <Table className='mt-3 mb-5' bordered hover responsive='lg'>
+          <thead>
+            <tr>
+              <th>Address</th>
+              <th>Neighbourhood</th>
+              <th>Garage</th>
+              <th>Property Type</th>
+              {/* <th>Assessment Value</th> */}
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                {assessment.house_number} {assessment.street_name}
+              </td>
+              <td>
+                {assessment.neighbourhood.charAt(0).toUpperCase() +
+                  assessment.neighbourhood.slice(1).toLowerCase()}
+              </td>
+              <td>
+                {assessment.garage === 'Y' ? (
+                  <input type='checkbox' checked={true} readOnly />
+                ) : (
+                  <input type='checkbox' checked={false} readOnly />
+                )}
+              </td>
+              <td>{assessment.mill_class_1}</td>
+              {/* <td>{assessment.assessed_value}</td> */}
+            </tr>
+          </tbody>
+        </Table>
+      ) : (
+        ''
+      )}
     </Container>
   );
 }
