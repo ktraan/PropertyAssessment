@@ -3,17 +3,9 @@ import { useState } from 'react';
 const Form = ({ getAssessment }) => {
   const [houseNumber, setHouseNumber] = useState('');
   const [streetName, setStreetName] = useState('');
-  // const [errors, setErrors] = useState('');
 
   const onSubmit = (event) => {
     event.preventDefault();
-
-    // Handle empty values
-    // if (!houseNumber || !streetName) {
-    //   setErrors('Please enter all of the fields before submitting.');
-    // } else {
-    //   setErrors('');
-    // }
 
     // Set values to getAssessment props
     getAssessment({ houseNumber, streetName });

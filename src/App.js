@@ -1,5 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
+import './styles/index.css';
 import Jumbotron from 'react-bootstrap/Jumbotron';
 import Form from './components/Form';
 import Row from 'react-bootstrap/Row';
