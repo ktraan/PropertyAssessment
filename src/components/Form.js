@@ -34,7 +34,7 @@ const Form = ({ getAssessment }) => {
           className='btn btn-primary mt-3 justify-content-end ml-4'
           type='submit'
         >
-          Get Assessment
+          Submit
         </button>
       </div>
     </form>

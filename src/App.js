@@ -6,7 +6,12 @@ import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
 import Image from 'react-bootstrap/Image';
 import Table from 'react-bootstrap/Table';
+import Tabs from 'react-bootstrap/Tabs';
+import Tab from 'react-bootstrap/Tab';
+
 import Form from './components/Form';
+import NeighbourhoodAssessments from './components/NeighbourhoodAssessments';
+
 import edmontonCity from './assets/edmonton.jpg';
 
 function App() {
@@ -54,13 +59,10 @@ function App() {
     }
   };
 
-  const hasGarage = async () => {
-    if (assessment.garage === 'Y') {
-      return true;
-    } else {
-      return false;
-    }
-  };
+  let formatter = new Intl.NumberFormat('en-us', {
+    style: 'currency',
+    currency: 'USD',
+  });
 
   return (
     <Container className='edmonton-background'>
@@ -93,41 +95,51 @@ function App() {
         )}
       </Row>
 
-      {assessment ? (
-        <Table className='mt-3 mb-5' bordered hover responsive='lg'>
-          <thead>
-            <tr>
-              <th>Address</th>
-              <th>Neighbourhood</th>
-              <th>Garage</th>
-              <th>Property Type</th>
-              {/* <th>Assessment Value</th> */}
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                {assessment.house_number} {assessment.street_name}
-              </td>
-              <td>
-                {assessment.neighbourhood.charAt(0).toUpperCase() +
-                  assessment.neighbourhood.slice(1).toLowerCase()}
-              </td>
-              <td>
-                {assessment.garage === 'Y' ? (
-                  <input type='checkbox' checked={true} readOnly />
-                ) : (
-                  <input type='checkbox' checked={false} readOnly />
-                )}
-              </td>
-              <td>{assessment.mill_class_1}</td>
-              {/* <td>{assessment.assessed_value}</td> */}
-            </tr>
-          </tbody>
-        </Table>
-      ) : (
-        ''
-      )}
+      <Tabs className='mt-3' defaultActiveKey='assessment' id=''>
+        <Tab eventKey='assessment' title='Assessment'>
+          {assessment ? (
+            <Table className='mt-3 mb-5' bordered hover responsive='lg'>
+              <thead>
+                <tr>
+                  <th>Address</th>
+                  <th>Neighbourhood</th>
+                  <th>Garage</th>
+                  <th>Property Type</th>
+                  <th>Assessment Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    {assessment.house_number} {assessment.street_name}
+                  </td>
+                  <td>
+                    {assessment.neighbourhood.charAt(0).toUpperCase() +
+                      assessment.neighbourhood.slice(1).toLowerCase()}
+                  </td>
+                  <td>
+                    {assessment.garage === 'Y' ? (
+                      <input type='checkbox' checked={true} readOnly />
+                    ) : (
+                      <input type='checkbox' checked={false} readOnly />
+                    )}
+                  </td>
+                  <td>
+                    {assessment.mill_class_1.charAt(0).toUpperCase() +
+                      assessment.mill_class_1.slice(1).toLowerCase()}
+                  </td>
+                  <td>{formatter.format(assessment.assessed_value)}</td>
+                </tr>
+              </tbody>
+            </Table>
+          ) : (
+            ''
+          )}
+        </Tab>
+        <Tab eventKey='nearAssessments' title='Nearby Assessments'>
+          <NeighbourhoodAssessments assessment={assessment} />
+        </Tab>
+      </Tabs>
     </Container>
   );
 }
