@@ -10,7 +10,6 @@ import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
 
 import Form from './components/Form';
-import NeighbourhoodAssessments from './components/NeighbourhoodAssessments';
 
 import edmontonCity from './assets/edmonton.jpg';
 
@@ -28,6 +27,7 @@ function App() {
 
   useEffect(() => {
     fetchNeighbourhoodAssessments();
+
     // Neighbourhood is our dependancy,
     // If we change the neighbourhood useEffect will mount it again & re-render
   }, [neighbourhood]);
@@ -79,25 +79,6 @@ function App() {
 
     setNeighbourhoodAssessments(data);
   };
-
-  // const changeTabs = async (key) => {
-  //   if (key === 'assessment') {
-  //     const res = await fetch(
-  //       `${BASE_URL_ENDPOINT}neighbourhood=${assessment.neighbourhood}`
-  //     );
-  //     const data = await res.json();
-
-  //     console.log(data);
-  //     // if (data.length === 0) {
-  //     //   setErrors(`No assessments found for ${assessment.neighbourhood}`);
-  //     // } else {
-  //     //   setNeighbourhoodAssessment(data);
-  //     //   setErrors('');
-  //     // }
-  //   }
-
-  //   // console.log(data);
-  // };
 
   let formatter = new Intl.NumberFormat('en-us', {
     style: 'currency',
@@ -178,9 +159,46 @@ function App() {
             )}
           </Tab>
           <Tab eventKey='nearAssessments' title='Nearby Assessments'>
-            <NeighbourhoodAssessments
-              neighbourhoodAssessments={neighbourhoodAssessments}
-            />
+            {neighbourhoodAssessments && (
+              <Table className='mt-3 mb-5' bordered hover responsive='lg'>
+                <thead>
+                  <tr>
+                    <th>Address</th>
+                    <th>Neighbourhood</th>
+                    <th>Garage</th>
+                    <th>Property Type</th>
+                    <th>Assessment Value</th>
+                  </tr>
+                </thead>
+                {neighbourhoodAssessments.map((x) => (
+                  <>
+                    <tbody>
+                      <tr>
+                        <td>
+                          {x.house_number} {x.street_name}
+                        </td>
+                        <td>
+                          {x.neighbourhood.charAt(0).toUpperCase() +
+                            x.neighbourhood.slice(1).toLowerCase()}
+                        </td>
+                        <td>
+                          {x.garage === 'Y' ? (
+                            <input type='checkbox' checked={true} readOnly />
+                          ) : (
+                            <input type='checkbox' checked={false} readOnly />
+                          )}
+                        </td>
+                        <td>
+                          {x.mill_class_1.charAt(0).toUpperCase() +
+                            x.mill_class_1.slice(1).toLowerCase()}
+                        </td>
+                        <td>{formatter.format(x.assessed_value)}</td>
+                      </tr>
+                    </tbody>
+                  </>
+                ))}
+              </Table>
+            )}
           </Tab>
         </Tabs>
       )}
