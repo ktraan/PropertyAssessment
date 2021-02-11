@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './styles/index.css';
 import Jumbotron from 'react-bootstrap/Jumbotron';
 import Row from 'react-bootstrap/Row';
@@ -15,14 +15,22 @@ import NeighbourhoodAssessments from './components/NeighbourhoodAssessments';
 import edmontonCity from './assets/edmonton.jpg';
 
 function App() {
-  const [assessment, setAssessment] = useState('');
   const [address, setAddress] = useState({
     houseNumber: '',
     streetName: '',
   });
+  const [assessment, setAssessment] = useState('');
+  const [neighbourhood, setNeighbourhood] = useState('');
+  const [neighbourhoodAssessments, setNeighbourhoodAssessments] = useState([]);
   const [errors, setErrors] = useState('');
 
   const BASE_URL_ENDPOINT = 'https://data.edmonton.ca/resource/q7d6-ambg.json?';
+
+  useEffect(() => {
+    fetchNeighbourhoodAssessments();
+    // Neighbourhood is our dependancy,
+    // If we change the neighbourhood useEffect will mount it again & re-render
+  }, [neighbourhood]);
 
   // Get assessment from props
   const getAssessment = async (props) => {
@@ -55,9 +63,41 @@ function App() {
       );
     } else {
       setAssessment(data[0]);
+      setNeighbourhood(data[0].neighbourhood);
       setErrors('');
     }
   };
+
+  const fetchNeighbourhoodAssessments = async () => {
+    const res = await fetch(
+      `${BASE_URL_ENDPOINT}neighbourhood=${assessment.neighbourhood}`
+    );
+
+    let data = await res.json();
+    data = data.slice(0, 10);
+    console.log(data);
+
+    setNeighbourhoodAssessments(data);
+  };
+
+  // const changeTabs = async (key) => {
+  //   if (key === 'assessment') {
+  //     const res = await fetch(
+  //       `${BASE_URL_ENDPOINT}neighbourhood=${assessment.neighbourhood}`
+  //     );
+  //     const data = await res.json();
+
+  //     console.log(data);
+  //     // if (data.length === 0) {
+  //     //   setErrors(`No assessments found for ${assessment.neighbourhood}`);
+  //     // } else {
+  //     //   setNeighbourhoodAssessment(data);
+  //     //   setErrors('');
+  //     // }
+  //   }
+
+  //   // console.log(data);
+  // };
 
   let formatter = new Intl.NumberFormat('en-us', {
     style: 'currency',
@@ -95,51 +135,55 @@ function App() {
         )}
       </Row>
 
-      <Tabs className='mt-3' defaultActiveKey='assessment' id=''>
-        <Tab eventKey='assessment' title='Assessment'>
-          {assessment ? (
-            <Table className='mt-3 mb-5' bordered hover responsive='lg'>
-              <thead>
-                <tr>
-                  <th>Address</th>
-                  <th>Neighbourhood</th>
-                  <th>Garage</th>
-                  <th>Property Type</th>
-                  <th>Assessment Value</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>
-                    {assessment.house_number} {assessment.street_name}
-                  </td>
-                  <td>
-                    {assessment.neighbourhood.charAt(0).toUpperCase() +
-                      assessment.neighbourhood.slice(1).toLowerCase()}
-                  </td>
-                  <td>
-                    {assessment.garage === 'Y' ? (
-                      <input type='checkbox' checked={true} readOnly />
-                    ) : (
-                      <input type='checkbox' checked={false} readOnly />
-                    )}
-                  </td>
-                  <td>
-                    {assessment.mill_class_1.charAt(0).toUpperCase() +
-                      assessment.mill_class_1.slice(1).toLowerCase()}
-                  </td>
-                  <td>{formatter.format(assessment.assessed_value)}</td>
-                </tr>
-              </tbody>
-            </Table>
-          ) : (
-            ''
-          )}
-        </Tab>
-        <Tab eventKey='nearAssessments' title='Nearby Assessments'>
-          <NeighbourhoodAssessments assessment={assessment} />
-        </Tab>
-      </Tabs>
+      {assessment && (
+        <Tabs className='mt-3' defaultActiveKey='assessment'>
+          <Tab eventKey='assessment' title='Assessment'>
+            {assessment ? (
+              <Table className='mt-3 mb-5' bordered hover responsive='lg'>
+                <thead>
+                  <tr>
+                    <th>Address</th>
+                    <th>Neighbourhood</th>
+                    <th>Garage</th>
+                    <th>Property Type</th>
+                    <th>Assessment Value</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      {assessment.house_number} {assessment.street_name}
+                    </td>
+                    <td>
+                      {assessment.neighbourhood.charAt(0).toUpperCase() +
+                        assessment.neighbourhood.slice(1).toLowerCase()}
+                    </td>
+                    <td>
+                      {assessment.garage === 'Y' ? (
+                        <input type='checkbox' checked={true} readOnly />
+                      ) : (
+                        <input type='checkbox' checked={false} readOnly />
+                      )}
+                    </td>
+                    <td>
+                      {assessment.mill_class_1.charAt(0).toUpperCase() +
+                        assessment.mill_class_1.slice(1).toLowerCase()}
+                    </td>
+                    <td>{formatter.format(assessment.assessed_value)}</td>
+                  </tr>
+                </tbody>
+              </Table>
+            ) : (
+              ''
+            )}
+          </Tab>
+          <Tab eventKey='nearAssessments' title='Nearby Assessments'>
+            <NeighbourhoodAssessments
+              neighbourhoodAssessments={neighbourhoodAssessments}
+            />
+          </Tab>
+        </Tabs>
+      )}
     </Container>
   );
 }
