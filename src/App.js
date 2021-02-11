@@ -159,6 +159,16 @@ function App() {
             )}
           </Tab>
           <Tab eventKey='nearAssessments' title='Nearby Assessments'>
+            <h5 className='mt-3'>
+              Assessments in the
+              <strong>
+                {' ' +
+                  neighbourhood.charAt(0).toUpperCase() +
+                  neighbourhood.slice(1).toLowerCase() +
+                  ' '}
+              </strong>
+              area
+            </h5>
             {neighbourhoodAssessments && (
               <Table className='mt-3 mb-5' bordered hover responsive='lg'>
                 <thead>
