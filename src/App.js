@@ -30,7 +30,7 @@ function App() {
 
     // Neighbourhood is our dependancy,
     // If we change the neighbourhood useEffect will mount it again & re-render
-  }, [neighbourhood]);
+  }, [assessment]);
 
   // Get assessment from props
   const getAssessment = async (props) => {
@@ -75,7 +75,6 @@ function App() {
 
     let data = await res.json();
     data = data.slice(0, 10);
-    console.log(data);
 
     setNeighbourhoodAssessments(data);
   };
@@ -180,32 +179,30 @@ function App() {
                     <th>Assessment Value</th>
                   </tr>
                 </thead>
-                {neighbourhoodAssessments.map((x) => (
-                  <>
-                    <tbody>
-                      <tr>
-                        <td>
-                          {x.house_number} {x.street_name}
-                        </td>
-                        <td>
-                          {x.neighbourhood.charAt(0).toUpperCase() +
-                            x.neighbourhood.slice(1).toLowerCase()}
-                        </td>
-                        <td>
-                          {x.garage === 'Y' ? (
-                            <input type='checkbox' checked={true} readOnly />
-                          ) : (
-                            <input type='checkbox' checked={false} readOnly />
-                          )}
-                        </td>
-                        <td>
-                          {x.mill_class_1.charAt(0).toUpperCase() +
-                            x.mill_class_1.slice(1).toLowerCase()}
-                        </td>
-                        <td>{formatter.format(x.assessed_value)}</td>
-                      </tr>
-                    </tbody>
-                  </>
+                {neighbourhoodAssessments.map((x, index) => (
+                  <tbody key={x.house_number}>
+                    <tr>
+                      <td>
+                        {x.house_number} {x.street_name}
+                      </td>
+                      <td>
+                        {x.neighbourhood.charAt(0).toUpperCase() +
+                          x.neighbourhood.slice(1).toLowerCase()}
+                      </td>
+                      <td>
+                        {x.garage === 'Y' ? (
+                          <input type='checkbox' checked={true} readOnly />
+                        ) : (
+                          <input type='checkbox' checked={false} readOnly />
+                        )}
+                      </td>
+                      <td>
+                        {x.mill_class_1.charAt(0).toUpperCase() +
+                          x.mill_class_1.slice(1).toLowerCase()}
+                      </td>
+                      <td>{formatter.format(x.assessed_value)}</td>
+                    </tr>
+                  </tbody>
                 ))}
               </Table>
             )}
