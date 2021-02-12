@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './styles/index.css';
 import Jumbotron from 'react-bootstrap/Jumbotron';
 import Row from 'react-bootstrap/Row';
@@ -10,6 +10,7 @@ import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
 
 import Form from './components/Form';
+import NearbyAssessments from './components/NearbyAssessments';
 
 import edmontonCity from './assets/edmonton.jpg';
 
@@ -23,11 +24,9 @@ function App() {
   const [neighbourhoodAssessments, setNeighbourhoodAssessments] = useState([]);
   const [errors, setErrors] = useState('');
 
-  const BASE_URL_ENDPOINT = 'https://data.edmonton.ca/resource/q7d6-ambg.json?';
+  const BASE_URL_ENDPOINT = 'https://data.edmonton.ca/resource/qi6a-xuwt.json?';
 
   useEffect(() => {
-    fetchNeighbourhoodAssessments();
-
     // Neighbourhood is our dependancy,
     // If we change the neighbourhood useEffect will mount it again & re-render
   }, [assessment]);
@@ -63,19 +62,22 @@ function App() {
       );
     } else {
       setAssessment(data[0]);
-      setNeighbourhood(data[0].neighbourhood);
       setErrors('');
+      setNeighbourhood(data[0].neighbourhood_name, () =>
+        fetchNeighbourhoodAssessments()
+      );
     }
   };
 
   const fetchNeighbourhoodAssessments = async () => {
     const res = await fetch(
-      `${BASE_URL_ENDPOINT}neighbourhood=${assessment.neighbourhood}`
+      `${BASE_URL_ENDPOINT}neighbourhood_name=${neighbourhood}`
     );
-
     let data = await res.json();
+
     data = data.slice(0, 10);
 
+    console.log(data);
     setNeighbourhoodAssessments(data);
   };
 
@@ -135,8 +137,8 @@ function App() {
                       {assessment.house_number} {assessment.street_name}
                     </td>
                     <td>
-                      {assessment.neighbourhood.charAt(0).toUpperCase() +
-                        assessment.neighbourhood.slice(1).toLowerCase()}
+                      {assessment.neighbourhood_name.charAt(0).toUpperCase() +
+                        assessment.neighbourhood_name.slice(1).toLowerCase()}
                     </td>
                     <td>
                       {assessment.garage === 'Y' ? (
@@ -157,7 +159,7 @@ function App() {
               ''
             )}
           </Tab>
-          <Tab eventKey='nearAssessments' title='Nearby Assessments'>
+          {/* <Tab eventKey='nearAssessments' title='Nearby Assessments'>
             <h5 className='mt-3'>
               Assessments in the
               <strong>
@@ -168,6 +170,7 @@ function App() {
               </strong>
               area
             </h5>
+
             {neighbourhoodAssessments && (
               <Table className='mt-3 mb-5' bordered hover responsive='lg'>
                 <thead>
@@ -186,8 +189,8 @@ function App() {
                         {x.house_number} {x.street_name}
                       </td>
                       <td>
-                        {x.neighbourhood.charAt(0).toUpperCase() +
-                          x.neighbourhood.slice(1).toLowerCase()}
+                        {x.neighbourhood_name.charAt(0).toUpperCase() +
+                          x.neighbourhood_name.slice(1).toLowerCase()}
                       </td>
                       <td>
                         {x.garage === 'Y' ? (
@@ -206,7 +209,7 @@ function App() {
                 ))}
               </Table>
             )}
-          </Tab>
+          </Tab> */}
         </Tabs>
       )}
     </Container>
