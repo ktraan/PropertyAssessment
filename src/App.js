@@ -63,23 +63,21 @@ function App() {
     } else {
       setAssessment(data[0]);
       setErrors('');
-      setNeighbourhood(data[0].neighbourhood_name, () =>
-        fetchNeighbourhoodAssessments()
-      );
+      setNeighbourhood(data[0].neighbourhood_name);
     }
   };
 
-  const fetchNeighbourhoodAssessments = async () => {
-    const res = await fetch(
-      `${BASE_URL_ENDPOINT}neighbourhood_name=${neighbourhood}`
-    );
-    let data = await res.json();
+  // const fetchNeighbourhoodAssessments = async () => {
+  //   const res = await fetch(
+  //     `${BASE_URL_ENDPOINT}neighbourhood_name=${neighbourhood}`
+  //   );
+  //   let data = await res.json();
 
-    data = data.slice(0, 10);
+  //   data = data.slice(0, 10);
 
-    console.log(data);
-    setNeighbourhoodAssessments(data);
-  };
+  //   console.log(data);
+  //   setNeighbourhoodAssessments(data);
+  // };
 
   let formatter = new Intl.NumberFormat('en-us', {
     style: 'currency',
